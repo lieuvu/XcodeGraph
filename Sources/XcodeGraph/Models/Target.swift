@@ -353,6 +353,14 @@ public struct Target: Equatable, Hashable, Comparable, Codable {
         return copy
     }
 
+    /// Returns a new copy of the target with the given settings
+    /// - Parameter settings: settings to be set to the copy.
+    public func with(settings: Settings) -> Target {
+        var copy = self
+        copy.settings = settings
+        return copy
+    }
+
     // MARK: - Comparable
 
     public static func < (lhs: Target, rhs: Target) -> Bool {

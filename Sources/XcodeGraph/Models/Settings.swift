@@ -78,12 +78,14 @@ public struct Configuration: Equatable, Codable {
 
     public var settings: SettingsDictionary
     public var xcconfig: AbsolutePath?
+    public var infoPlist: InfoPlist?
 
     // MARK: - Init
 
-    public init(settings: SettingsDictionary = [:], xcconfig: AbsolutePath? = nil) {
+    public init(settings: SettingsDictionary = [:], xcconfig: AbsolutePath? = nil, infoPlist: InfoPlist? = nil) {
         self.settings = settings
         self.xcconfig = xcconfig
+        self.infoPlist = infoPlist
     }
 
     // MARK: - Public
@@ -93,7 +95,18 @@ public struct Configuration: Equatable, Codable {
     public func with(settings: SettingsDictionary) -> Configuration {
         Configuration(
             settings: settings,
-            xcconfig: xcconfig
+            xcconfig: xcconfig,
+            infoPlist: infoPlist
+        )
+    }
+
+    /// Returns a copy of the configuration with the given info plist.
+    /// - Parameter infoPlist: InfoPlist  to be set to the copy.
+    public func with(infoPlist: InfoPlist) -> Configuration {
+        Configuration(
+            settings: settings,
+            xcconfig: xcconfig,
+            infoPlist: infoPlist
         )
     }
 }
@@ -142,7 +155,21 @@ public struct Settings: Equatable, Codable {
         self.defaultSettings = defaultSettings
     }
 
+    // MARK: - Public
+
+    /// Returns a copy of the settings with the given settings set.
+    /// - Parameter settings: SettingsDictionary to be set to the copy.
     public func with(base: SettingsDictionary) -> Settings {
+        .init(
+            base: base,
+            configurations: configurations,
+            defaultSettings: defaultSettings
+        )
+    }
+
+    /// Returns a copy of the settings with the given configurations.
+    /// - Parameter configurations: configurations to be set to the copy.
+    public func with(configurations: [BuildConfiguration: Configuration?]) -> Settings {
         .init(
             base: base,
             configurations: configurations,
